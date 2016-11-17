@@ -6,14 +6,42 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2016 | +Inf</title>
+  <title>MongoDB安装简要 | +Inf</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="+Inf">
-<meta property="og:url" content="http://yoursite.com/archives/2016/index.html">
+  <meta name="description" content="前段时间尝试使用MongoDB，在安装过程中也是稍微遇到了些许的周折，先将简要的安装步骤记录如下。
+
+系统：ubuntu 14.04, 64bit
+MongoDB: 3.4
+
+按照官网步骤安装没有太复杂的步骤，按照这里官网的解释进行一步步的安装即可。
+配置文件安装好以后可以配置 /etc/mongodb.conf 文件进行一些基本的设置。在初期可能和我自己相关的是：
+
+注释掉 bind = 127">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB安装简要">
+<meta property="og:url" content="http://yoursite.com/2016/11/17/MongoDB安装简要/index.html">
 <meta property="og:site_name" content="+Inf">
+<meta property="og:description" content="前段时间尝试使用MongoDB，在安装过程中也是稍微遇到了些许的周折，先将简要的安装步骤记录如下。
+
+系统：ubuntu 14.04, 64bit
+MongoDB: 3.4
+
+按照官网步骤安装没有太复杂的步骤，按照这里官网的解释进行一步步的安装即可。
+配置文件安装好以后可以配置 /etc/mongodb.conf 文件进行一些基本的设置。在初期可能和我自己相关的是：
+
+注释掉 bind = 127">
+<meta property="og:updated_time" content="2016-11-17T14:45:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="+Inf">
+<meta name="twitter:title" content="MongoDB安装简要">
+<meta name="twitter:description" content="前段时间尝试使用MongoDB，在安装过程中也是稍微遇到了些许的周折，先将简要的安装步骤记录如下。
+
+系统：ubuntu 14.04, 64bit
+MongoDB: 3.4
+
+按照官网步骤安装没有太复杂的步骤，按照这里官网的解释进行一步步的安装即可。
+配置文件安装好以后可以配置 /etc/mongodb.conf 文件进行一些基本的设置。在初期可能和我自己相关的是：
+
+注释掉 bind = 127">
   
     <link rel="alternative" href="/atom.xml" title="+Inf" type="application/atom+xml">
   
@@ -141,118 +169,131 @@ ga('send', 'pageview');
 </nav>
 
       <div class="body-wrap">
+        <article id="post-MongoDB安装简要" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
+    <h1 class="article-title" itemprop="name">
+      MongoDB安装简要
+    </h1>
   
+
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
+        <p>前段时间尝试使用MongoDB，在安装过程中也是稍微遇到了些许的周折，先将简要的安装步骤记录如下。</p>
+<ul>
+<li>系统：ubuntu 14.04, 64bit</li>
+<li>MongoDB: 3.4</li>
+</ul>
+<h1 id="按照官网步骤安装"><a href="#按照官网步骤安装" class="headerlink" title="按照官网步骤安装"></a>按照官网步骤安装</h1><p>没有太复杂的步骤，按照<a href="https://docs.mongodb.com/master/tutorial/install-mongodb-on-ubuntu/" target="_blank" rel="external">这里</a>官网的解释进行一步步的安装即可。</p>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>安装好以后可以配置 /etc/mongodb.conf 文件进行一些基本的设置。在初期可能和我自己相关的是：</p>
+<ul>
+<li>注释掉 <code>bind = 127.0.0.1</code> 以允许远程客户端的访问（同时因为我自己使用的阿里云，需要在云服务器配置上打开相应端口）</li>
+<li>打开 <code>auth = true</code></li>
+<li>MongoDB默认数据文件夹在<code>/data/db</code>, 开启数据库服务前若没有相应文件夹将报错</li>
+</ul>
+<h1 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h1><p>最简单的 <code>mongod</code> 就可以。如需使用配置文件，可以加上 <code>--config</code>参数，其它的如 <code>--port</code>(指定端口)等可以参考帮助。重启或者关闭使用 <code>service mongodb restart(stop)</code> 就好了</p>
+<h1 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h1><p>因为指定了要求验证，数据库的操作需要验证登陆用户，验证的具体语法是</p>
+<pre><code>use &lt;db_name&gt;
+db.auth(&quot;&lt;username&gt;&quot;, &quot;&lt;password&gt;&quot;)
+</code></pre><p>当然，验证前需要创建相应的用户</p>
+<pre><code>use &lt;db_name&gt;
+db.createUser(
+    { user: &quot;username&quot;,
+      pwd: &quot;password&quot;,
+      roles: [{role: &quot;&lt;role_group&gt;&quot;, db: &quot;db_name}, 
+                  {...}, 
+                  &quot;&lt;role_group&gt;&quot;]
+    }
+)
+</code></pre><p>最后一个 <code>role_group</code> 将应用于当前的collection。相应的用户权限有一部分是已经定义好的，可以在<a href="https://docs.mongodb.com/manual/reference/built-in-roles/#superuser-roles" target="_blank" rel="external">这里</a>查看。</p>
+<h1 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h1><p>如果使用GUI（这里我用的是robomongo），那没什么说的。在客户端shell条件下，直接输入 mongo IP:port 就可以登录了。进入相应collection，然后验证用户之后就可以进行相应的操作。</p>
+
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/11/17/MongoDB安装简要/" class="archive-article-date">
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/17/MongoDB安装简要/" class="archive-article-date">
   	<time datetime="2016-11-17T14:23:47.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-17</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/11/17/MongoDB安装简要/">MongoDB安装简要</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/10/17/如何解决nook中的中文问号乱码问题/" class="archive-article-date">
-  	<time datetime="2016-10-17T14:50:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/10/17/如何解决nook中的中文问号乱码问题/">如何解决nook中的中文问号乱码问题</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/10/17/如何解决nook中的中文问号乱码问题/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">如何解决nook中的中文问号乱码问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/07/03/理性思辨/" class="archive-article-date">
-  	<time datetime="2016-07-03T05:17:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-07-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/07/03/理性思辨/">理性思辨</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/首篇/">首篇</a></li></ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="MongoDB安装简要" data-title="MongoDB安装简要" data-url="http://yoursite.com/2016/11/17/MongoDB安装简要/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"personal-blog-5a10063779b6e750a4fc3242ec69e43d"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 
       </div>
@@ -275,8 +316,8 @@ ga('send', 'pageview');
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
