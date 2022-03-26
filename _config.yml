@@ -28,7 +28,7 @@ url: "www.aicracker.com" # the base hostname & protocol for your site, e.g. http
 github_username:  umbriel47
 
 # Build settings
-theme: minima
+theme: architect
 plugins:
   - jekyll-feed
 
