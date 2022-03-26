@@ -29,7 +29,7 @@ github_username:  umbriel47
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: cayman
 # remote_theme: pages-themes/architect@v0.2.0
 plugins:
   - jekyll-feed
